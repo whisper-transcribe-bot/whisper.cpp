@@ -269,9 +269,15 @@ bool output_txt(struct whisper_context * ctx, const char * fname) {
 
     fprintf(stderr, "%s: saving output to '%s'\n", __func__, fname);
 
+    fout << "t0;t1;text" << "\n";
+
     const int n_segments = whisper_full_n_segments(ctx);
     for (int i = 0; i < n_segments; ++i) {
         const char * text = whisper_full_get_segment_text(ctx, i);
+        int64_t t0 = whisper_full_get_segment_t0(ctx, i) * 10; // convert from cs to ms
+        int64_t t1 = whisper_full_get_segment_t1(ctx, i) * 10; // convert from cs to ms
+        fout << t0 << ";";
+        fout << t1 << ";";
         fout << text << "\n";
     }
 
